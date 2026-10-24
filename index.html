@@ -11,13 +11,13 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: manipulation;
+      touch-action: none; /* Полная блокировка паразитных жестов и зума */
     }
 
     body {
       width: 100vw;
       height: 100vh;
-      height: 100dvh; /* Корректная высота с учётом плашек Telegram и мобильных браузеров */
+      height: 100dvh;
       overflow: hidden;
       background-color: #12101b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -25,21 +25,21 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 8px;
-      padding-bottom: max(6px, env(safe-area-inset-bottom)); /* Отступ от домашней полоски на смартфонах */
+      padding: 6px 10px;
+      padding-bottom: max(10px, env(safe-area-inset-bottom));
       color: #333;
     }
 
-    /* Верхняя панель управления: строгий ряд без переносов */
+    /* Верхняя панель */
     .top-panel {
       width: 100%;
       max-width: 900px;
-      background: rgba(255, 255, 255, 0.75);
+      background: rgba(255, 255, 255, 0.78);
       backdrop-filter: blur(12px);
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.85);
       border-radius: 18px;
-      padding: 6px 14px;
+      padding: 6px 12px;
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
@@ -81,7 +81,7 @@
       font-weight: 800;
       color: #0f172a;
       box-shadow: inset 0 1px 3px rgba(0,0,0,0.08);
-      min-width: 78px;
+      min-width: 76px;
       justify-content: center;
       flex-shrink: 0;
     }
@@ -140,7 +140,7 @@
     }
 
     .volume-slider {
-      width: 55px;
+      width: 50px;
       height: 5px;
       cursor: pointer;
       accent-color: #0d9488;
@@ -152,7 +152,7 @@
       color: #1e293b;
       font-size: 11px;
       font-weight: 700;
-      padding: 5px 10px;
+      padding: 5px 9px;
       border-radius: 12px;
       cursor: pointer;
       box-shadow: 0 2px 4px rgba(0,0,0,0.04);
@@ -160,24 +160,17 @@
       white-space: nowrap;
     }
 
-    .btn-pill:hover {
-      background: #f8fafc;
-    }
-
-    .btn-pill:active {
-      transform: scale(0.96);
-    }
+    .btn-pill:hover { background: #f8fafc; }
+    .btn-pill:active { transform: scale(0.96); }
 
     .btn-danger {
       background: #f43f5e;
       color: #ffffff;
       border: none;
     }
+    .btn-danger:hover { background: #e11d48; }
 
-    .btn-danger:hover {
-      background: #e11d48;
-    }
-
+    /* Холст игры */
     .game-viewport {
       position: relative;
       width: 100%;
@@ -197,6 +190,7 @@
       display: block;
     }
 
+    /* Модалки */
     .modal-overlay {
       position: absolute;
       inset: 0;
@@ -214,9 +208,7 @@
       transition: opacity 0.3s ease;
     }
 
-    .modal-overlay.hidden {
-      display: none;
-    }
+    .modal-overlay.hidden { display: none; }
 
     .modal-card {
       max-width: 440px;
@@ -228,24 +220,9 @@
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
     }
 
-    .modal-icon {
-      font-size: 52px;
-      margin-bottom: 12px;
-    }
-
-    .modal-title {
-      font-size: 24px;
-      font-weight: 800;
-      margin-bottom: 10px;
-      color: #f1f5f9;
-    }
-
-    .modal-desc {
-      font-size: 14px;
-      line-height: 1.6;
-      color: #cbd5e1;
-      margin-bottom: 22px;
-    }
+    .modal-icon { font-size: 52px; margin-bottom: 12px; }
+    .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; color: #f1f5f9; }
+    .modal-desc { font-size: 14px; line-height: 1.6; color: #cbd5e1; margin-bottom: 22px; }
 
     .btn-action {
       background: linear-gradient(135deg, #2dd4bf, #14b8a6);
@@ -260,13 +237,8 @@
       transition: transform 0.1s, filter 0.15s;
     }
 
-    .btn-action:hover {
-      filter: brightness(1.1);
-    }
-
-    .btn-action:active {
-      transform: scale(0.97);
-    }
+    .btn-action:hover { filter: brightness(1.1); }
+    .btn-action:active { transform: scale(0.97); }
 
     .dialogue-overlay {
       position: absolute;
@@ -280,9 +252,7 @@
       z-index: 25;
     }
 
-    .dialogue-overlay.hidden {
-      display: none;
-    }
+    .dialogue-overlay.hidden { display: none; }
 
     .dialogue-card {
       pointer-events: auto;
@@ -323,61 +293,63 @@
       margin-top: 8px;
     }
 
-    /* Мобильное управление: компактные кнопки, не вылезающие за край */
+    /* Удобный мобильный геймпад под большие пальцы */
     .touch-controls {
       width: 100%;
       max-width: 900px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 2px 6px;
+      padding: 4px 6px;
+      gap: 12px;
       z-index: 20;
     }
 
     @media (min-width: 768px) {
-      .touch-controls {
-        display: none;
-      }
+      .touch-controls { display: none; }
     }
 
     .touch-dir-group {
       display: flex;
-      gap: 10px;
+      gap: 12px;
     }
 
     .touch-btn {
-      width: 58px;
-      height: 46px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.2);
-      border: 1px solid rgba(255, 255, 255, 0.35);
+      width: 66px;
+      height: 54px;
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.16);
+      border: 1.5px solid rgba(255, 255, 255, 0.32);
       color: #ffffff;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 800;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
 
     .touch-btn:active {
-      background: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.38);
       transform: scale(0.95);
     }
 
     .touch-btn-jump {
-      width: 92px;
-      background: rgba(251, 191, 36, 0.35);
-      border-color: rgba(251, 191, 36, 0.6);
+      flex: 1;
+      max-width: 140px;
+      height: 54px;
+      background: rgba(251, 191, 36, 0.28);
+      border-color: rgba(251, 191, 36, 0.55);
       color: #fef08a;
-      font-size: 13px;
-      letter-spacing: 0.5px;
+      font-size: 14px;
+      letter-spacing: 0.8px;
     }
 
     .touch-btn-jump:active {
-      background: rgba(251, 191, 36, 0.55);
+      background: rgba(251, 191, 36, 0.5);
     }
   </style>
 </head>
@@ -478,7 +450,7 @@
         this.ctx = null;
         this.masterGain = null;
         this.sfxGain = null;
-        this.volume = 1.0; // 100% громкости по умолчанию
+        this.volume = 1.0;
         this.isMuted = false;
         this.currentStage = null;
 
@@ -842,6 +814,7 @@
     let CW = 800;
     let CH = 500;
     let floorY = 450;
+    let mobileScale = 1.0; // Динамический масштаб для мобильных
 
     function resize() {
       const parent = canvas.parentElement;
@@ -859,12 +832,18 @@
       ctx.resetTransform();
       ctx.scale(dpr, dpr);
 
+      // На узких мобильных экранах уменьшаем пропорции персонажа и предметов
+      mobileScale = CW < 550 ? 0.78 : 1.0;
+
       floorY = CH - 42;
+      hero.updateDimensions();
     }
     window.addEventListener('resize', resize);
 
     class CozyHero {
       constructor() {
+        this.baseW = 32;
+        this.baseH = 40;
         this.w = 32;
         this.h = 40;
         this.x = 200;
@@ -883,7 +862,13 @@
         this.surprised = false;
       }
 
+      updateDimensions() {
+        this.w = this.baseW * mobileScale;
+        this.h = this.baseH * mobileScale;
+      }
+
       reset(xPos = CW / 2) {
+        this.updateDimensions();
         this.x = xPos - this.w / 2;
         this.y = floorY - this.h;
         this.vx = 0;
@@ -948,6 +933,9 @@
         const cx = this.x + this.w / 2;
         const cy = this.y + this.h / 2;
         c.translate(cx, cy);
+
+        // Масштабирование персонажа под экран
+        c.scale(mobileScale, mobileScale);
 
         if (!this.facingRight) c.scale(-1, 1);
 
@@ -1059,7 +1047,7 @@
         this.speed = speed;
         this.rot = Math.random() * Math.PI * 2;
         this.rotSpeed = (Math.random() - 0.5) * 2.2;
-        this.radius = 15;
+        this.radius = 15 * mobileScale;
       }
 
       update(dt) {
@@ -1070,6 +1058,7 @@
       draw(c) {
         c.save();
         c.translate(this.x, this.y);
+        c.scale(mobileScale, mobileScale);
         c.rotate(this.rot);
 
         switch (this.type) {
@@ -1163,10 +1152,12 @@
       constructor(side, y, speed, type) {
         this.side = side;
         this.type = type;
-        this.w = 36;
-        this.h = 22;
+        this.w = 36 * mobileScale;
+        this.h = 22 * mobileScale;
         this.y = y;
-        this.x = side === 'left' ? -45 : CW + 45;
+        // Запускаем далеко за пределами экрана, чтобы появление было плавным
+        const offset = 140;
+        this.x = side === 'left' ? -offset : CW + offset;
         this.vx = (side === 'left' ? 1 : -1) * speed;
         this.bobble = Math.random() * 10;
       }
@@ -1180,6 +1171,7 @@
         c.save();
         const currentY = this.y + Math.sin(this.bobble) * 3;
         c.translate(this.x, currentY);
+        c.scale(mobileScale, mobileScale);
         if (this.vx < 0) c.scale(-1, 1);
 
         if (this.type === 'crane') {
@@ -1423,10 +1415,10 @@
       c.arc(CW / 2, floorY - 90, 180, Math.PI, 0);
       c.stroke();
 
-      const cols = [40, 120, CW - 160, CW - 80];
+      const cols = [30, 95, CW - 125, CW - 60];
       cols.forEach((colX, idx) => {
         const isFar = (idx === 1 || idx === 2);
-        const colW = isFar ? 26 : 32;
+        const colW = (isFar ? 24 : 28) * mobileScale;
         const colH = floorY - 30;
 
         const colGrad = c.createLinearGradient(colX, 0, colX + colW, 0);
@@ -1437,13 +1429,13 @@
         c.fillRect(colX, 30, colW, colH);
 
         c.fillStyle = 'rgba(100, 80, 140, 0.18)';
-        c.fillRect(colX + 5, 30, 2.5, colH);
-        c.fillRect(colX + colW / 2 - 1, 30, 2.5, colH);
-        c.fillRect(colX + colW - 8, 30, 2.5, colH);
+        c.fillRect(colX + 4, 30, 2, colH);
+        c.fillRect(colX + colW / 2 - 1, 30, 2, colH);
+        c.fillRect(colX + colW - 6, 30, 2, colH);
 
         c.fillStyle = '#fde047';
-        c.fillRect(colX - 6, 22, colW + 12, 10);
-        c.fillRect(colX - 8, floorY - 8, colW + 16, 12);
+        c.fillRect(colX - 5, 22, colW + 10, 9);
+        c.fillRect(colX - 6, floorY - 8, colW + 12, 11);
       });
     }
 
@@ -1580,9 +1572,9 @@
           c.restore();
         });
 
-        drawSkyIsland(c, CW * 0.22, CH * 0.42, 140, 70, st, 0.2, true);
-        drawSkyIsland(c, CW * 0.78, CH * 0.38, 125, 60, st, 1.8, true);
-        drawSkyIsland(c, CW * 0.52, CH * 0.26, 90, 42, st, 3.1, false);
+        drawSkyIsland(c, CW * 0.22, CH * 0.42, 140 * mobileScale, 70 * mobileScale, st, 0.2, true);
+        drawSkyIsland(c, CW * 0.78, CH * 0.38, 125 * mobileScale, 60 * mobileScale, st, 1.8, true);
+        drawSkyIsland(c, CW * 0.52, CH * 0.26, 90 * mobileScale, 42 * mobileScale, st, 3.1, false);
       }
 
       c.fillStyle = 'rgba(255, 255, 255, 0.45)';
@@ -1658,7 +1650,7 @@
       state.transition.phase = 'CRACKING';
       state.transition.timer = 0;
       state.transition.holeX = hero.x + hero.w / 2;
-      state.transition.holeWidth = 160;
+      state.transition.holeWidth = 160 * mobileScale;
       state.transition.cracks = [];
       state.transition.rubble = [];
 
@@ -1703,8 +1695,8 @@
             tr.rubble.push({
               x: tr.holeX + (Math.random() - 0.5) * tr.holeWidth,
               y: floorY + Math.random() * 12,
-              w: Math.random() * 16 + 10,
-              h: Math.random() * 12 + 6,
+              w: (Math.random() * 16 + 10) * mobileScale,
+              h: (Math.random() * 12 + 6) * mobileScale,
               vx: (Math.random() - 0.5) * 110,
               vy: Math.random() * 80 + 30,
               rot: Math.random() * Math.PI,
@@ -1836,6 +1828,7 @@
 
       c.save();
       c.translate(bx, by);
+      c.scale(mobileScale, mobileScale);
 
       const halo = c.createRadialGradient(0, 0, 15, 0, 0, 150);
       halo.addColorStop(0, 'rgba(254, 240, 138, 0.7)');
@@ -1879,7 +1872,7 @@
 
       if (state.laserActive) {
         c.save();
-        const beamW = 54 + Math.sin(t * 30) * 14;
+        const beamW = (54 + Math.sin(t * 30) * 14) * mobileScale;
         const grad = c.createLinearGradient(bx - beamW / 2, by, bx + beamW / 2, floorY);
         grad.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
         grad.addColorStop(0.4, 'rgba(254, 240, 138, 0.85)');
@@ -1968,7 +1961,6 @@
 
             if (state.timeLeft <= 0) {
               state.timeLeft = 0;
-
               state.timeLeft = 30.0;
               state.fallingItems = [];
               state.horizontalHazards = [];
@@ -1984,31 +1976,32 @@
 
         if (!state.transition.active && state.graceTimer <= 0) {
           state.spawnTimer += dt;
-          const spawnInterval = Math.max(0.38, 0.85 - (30.0 - state.timeLeft) * 0.014);
+          const spawnInterval = Math.max(0.42, 0.88 - (30.0 - state.timeLeft) * 0.012);
           const cfg = STAGE_CONFIGS[state.currentLevel];
 
           if (state.spawnTimer >= spawnInterval && cfg && cfg.items) {
             state.spawnTimer = 0;
             const itemType = cfg.items[Math.floor(Math.random() * cfg.items.length)];
             const spawnX = Math.random() * (CW - 60) + 30;
-            const speed = Math.random() * 80 + 170 + (state.currentLevel * 30);
+            const speed = (Math.random() * 70 + 160 + (state.currentLevel * 25)) * (CW < 550 ? 0.85 : 1.0);
             state.fallingItems.push(new FallingItem(itemType, spawnX, speed));
           }
 
           state.horizontalTimer -= dt;
           if (state.horizontalTimer <= 0 && cfg && cfg.sideHazard) {
-            // Адаптивная сложность: на узких мобильных экранах препятствия летят мягче
-            const isMobileScreen = CW < 550;
-            state.horizontalTimer = Math.random() * 3.5 + (isMobileScreen ? 4.0 : 3.2);
+            // Комфортный интервал спавна сбоку
+            const isMobile = CW < 550;
+            state.horizontalTimer = Math.random() * 3.2 + (isMobile ? 4.2 : 3.2);
 
             const side = Math.random() > 0.5 ? 'left' : 'right';
 
+            // На телефоне скорость сбалансирована так, чтобы препятствие летело ~2.5–3 секунды через экран
             let hazSpeed = Math.random() * 50 + 190 + (state.currentLevel * 25);
-            if (isMobileScreen) {
-              hazSpeed = (CW * 0.38) + (state.currentLevel * 15);
+            if (isMobile) {
+              hazSpeed = (CW * 0.32) + (state.currentLevel * 10);
             }
 
-            state.horizontalHazards.push(new HorizontalHazard(side, floorY - 24, hazSpeed, cfg.sideHazard));
+            state.horizontalHazards.push(new HorizontalHazard(side, floorY - 22 * mobileScale, hazSpeed, cfg.sideHazard));
           }
 
           for (let i = state.fallingItems.length - 1; i >= 0; i--) {
@@ -2039,7 +2032,7 @@
               break;
             }
 
-            if (haz.x < -100 || haz.x > CW + 100) {
+            if (haz.x < -180 || haz.x > CW + 180) {
               state.horizontalHazards.splice(i, 1);
             }
           }
@@ -2131,9 +2124,23 @@
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
 
+    // Улучшенный мультитач без сбоев и залипаний
     function bindTouch(btn, onDown, onUp) {
-      btn.addEventListener('touchstart', (e) => { e.preventDefault(); onDown(); });
-      btn.addEventListener('touchend', (e) => { e.preventDefault(); onUp(); });
+      btn.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        onDown();
+      }, { passive: false });
+
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        onUp();
+      }, { passive: false });
+
+      btn.addEventListener('touchcancel', (e) => {
+        e.preventDefault();
+        onUp();
+      }, { passive: false });
+
       btn.addEventListener('mousedown', (e) => { e.preventDefault(); onDown(); });
       btn.addEventListener('mouseup', (e) => { e.preventDefault(); onUp(); });
       btn.addEventListener('mouseleave', () => onUp());
@@ -2150,13 +2157,8 @@
       btnMute.textContent = muted ? '🔇' : '🔊';
     });
 
-    btnPause.addEventListener('click', () => {
-      togglePause();
-    });
-
-    btnResume.addEventListener('click', () => {
-      togglePause();
-    });
+    btnPause.addEventListener('click', () => { togglePause(); });
+    btnResume.addEventListener('click', () => { togglePause(); });
 
     volumeSlider.addEventListener('input', (e) => {
       audio.init();
