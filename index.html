@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>Небесные Обители: Путь в Эдем</title>
   <style>
     *, *::before, *::after {
@@ -17,6 +17,7 @@
     body {
       width: 100vw;
       height: 100vh;
+      height: 100dvh; /* Корректная высота с учётом плашек Telegram и мобильных браузеров */
       overflow: hidden;
       background-color: #12101b;
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
@@ -24,7 +25,8 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 8px;
+      padding: 6px 8px;
+      padding-bottom: max(6px, env(safe-area-inset-bottom)); /* Отступ от домашней полоски на смартфонах */
       color: #333;
     }
 
@@ -42,7 +44,7 @@
       flex-wrap: nowrap;
       align-items: center;
       justify-content: space-between;
-      gap: 10px;
+      gap: 8px;
       box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
       z-index: 20;
     }
@@ -181,7 +183,7 @@
       width: 100%;
       max-width: 900px;
       flex: 1;
-      margin: 6px 0;
+      margin: 4px 0;
       background: #0f172a;
       border-radius: 24px;
       overflow: hidden;
@@ -321,13 +323,14 @@
       margin-top: 8px;
     }
 
+    /* Мобильное управление: компактные кнопки, не вылезающие за край */
     .touch-controls {
       width: 100%;
       max-width: 900px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 4px 6px;
+      padding: 2px 6px;
       z-index: 20;
     }
 
@@ -339,17 +342,17 @@
 
     .touch-dir-group {
       display: flex;
-      gap: 12px;
+      gap: 10px;
     }
 
     .touch-btn {
-      width: 60px;
-      height: 52px;
-      border-radius: 16px;
+      width: 58px;
+      height: 46px;
+      border-radius: 14px;
       background: rgba(255, 255, 255, 0.2);
       border: 1px solid rgba(255, 255, 255, 0.35);
       color: #ffffff;
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 800;
       display: flex;
       align-items: center;
@@ -365,11 +368,11 @@
     }
 
     .touch-btn-jump {
-      width: 96px;
+      width: 92px;
       background: rgba(251, 191, 36, 0.35);
       border-color: rgba(251, 191, 36, 0.6);
       color: #fef08a;
-      font-size: 14px;
+      font-size: 13px;
       letter-spacing: 0.5px;
     }
 
@@ -399,7 +402,7 @@
       <button id="btnPause" class="btn-pill" title="Пауза (ESC)">⏸</button>
       <div class="volume-box">
         <button id="btnMute" class="btn-icon" title="Звук">🔊</button>
-        <input id="volumeSlider" class="volume-slider" type="range" min="0" max="1" step="0.05" value="1.0">
+        <input id="volumeSlider" class="volume-slider" type="range" min="0" max="1" step="0.05" value="1">
       </div>
       <button id="btnRestartRoom" class="btn-pill" title="Начать заново уровень">↺ Уровень</button>
       <button id="btnFullReset" class="btn-pill btn-danger" title="Начать заново всю игру">✕ Сначала</button>
@@ -455,7 +458,7 @@
         <div class="modal-icon">🪶</div>
         <h2 class="modal-title" style="color: #fde047;">Испепелены в Свете!</h2>
         <p class="modal-desc" style="margin-bottom: 0;">
-          Вы с честью преодолели все испытания! Но свободные места в раю подошли к концу. Ваш дух стал тёплым закатным сиянием небес, наверное...
+          Вы с честью преодолели все испытания! Но свободные места в раю подошли к концу. Ваш дух стал теплым закатным сиянием небес, наверное...
         </p>
       </div>
     </div>
@@ -475,7 +478,7 @@
         this.ctx = null;
         this.masterGain = null;
         this.sfxGain = null;
-        this.volume = 1.0;
+        this.volume = 1.0; // 100% громкости по умолчанию
         this.isMuted = false;
         this.currentStage = null;
 
@@ -1994,9 +1997,17 @@
 
           state.horizontalTimer -= dt;
           if (state.horizontalTimer <= 0 && cfg && cfg.sideHazard) {
-            state.horizontalTimer = Math.random() * 3.5 + 3.2;
+            // Адаптивная сложность: на узких мобильных экранах препятствия летят мягче
+            const isMobileScreen = CW < 550;
+            state.horizontalTimer = Math.random() * 3.5 + (isMobileScreen ? 4.0 : 3.2);
+
             const side = Math.random() > 0.5 ? 'left' : 'right';
-            const hazSpeed = Math.random() * 50 + 190 + (state.currentLevel * 25);
+
+            let hazSpeed = Math.random() * 50 + 190 + (state.currentLevel * 25);
+            if (isMobileScreen) {
+              hazSpeed = (CW * 0.38) + (state.currentLevel * 15);
+            }
+
             state.horizontalHazards.push(new HorizontalHazard(side, floorY - 24, hazSpeed, cfg.sideHazard));
           }
 
