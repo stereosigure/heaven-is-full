@@ -11,7 +11,7 @@
       padding: 0;
       user-select: none;
       -webkit-user-select: none;
-      touch-action: none; /* Полная блокировка паразитных жестов и зума */
+      touch-action: none;
     }
 
     body {
@@ -30,7 +30,7 @@
       color: #333;
     }
 
-    /* Верхняя панель */
+    /* Верхняя панель управления */
     .top-panel {
       width: 100%;
       max-width: 900px;
@@ -39,7 +39,7 @@
       -webkit-backdrop-filter: blur(12px);
       border: 1px solid rgba(255, 255, 255, 0.85);
       border-radius: 18px;
-      padding: 6px 12px;
+      padding: 6px 14px;
       display: flex;
       flex-wrap: nowrap;
       align-items: center;
@@ -190,7 +190,7 @@
       display: block;
     }
 
-    /* Модалки */
+    /* Модальные окна */
     .modal-overlay {
       position: absolute;
       inset: 0;
@@ -208,29 +208,49 @@
       transition: opacity 0.3s ease;
     }
 
+    /* Главное меню прозрачнее, чтобы любоваться плывущими облаками */
+    .modal-overlay.menu-bg {
+      background: rgba(18, 16, 27, 0.45);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+    }
+
     .modal-overlay.hidden { display: none; }
 
     .modal-card {
       max-width: 440px;
       width: 100%;
-      background: rgba(30, 41, 59, 0.85);
+      background: rgba(30, 41, 59, 0.88);
       border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 22px;
-      padding: 28px 24px;
+      padding: 24px 22px;
       box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
     }
 
-    .modal-icon { font-size: 52px; margin-bottom: 12px; }
-    .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; color: #f1f5f9; }
-    .modal-desc { font-size: 14px; line-height: 1.6; color: #cbd5e1; margin-bottom: 22px; }
+    .modal-icon { font-size: 46px; }
+    .modal-title { font-size: 22px; font-weight: 800; color: #f1f5f9; }
+    .modal-desc { font-size: 13px; line-height: 1.55; color: #cbd5e1; }
+
+    .menu-btn-group {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 4px;
+    }
 
     .btn-action {
+      width: 100%;
       background: linear-gradient(135deg, #2dd4bf, #14b8a6);
       color: #042f2e;
       font-size: 15px;
       font-weight: 800;
       border: none;
-      padding: 12px 28px;
+      padding: 12px 24px;
       border-radius: 14px;
       cursor: pointer;
       box-shadow: 0 4px 16px rgba(20, 184, 166, 0.35);
@@ -239,6 +259,35 @@
 
     .btn-action:hover { filter: brightness(1.1); }
     .btn-action:active { transform: scale(0.97); }
+
+    .btn-secondary {
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      color: #f1f5f9;
+      box-shadow: none;
+    }
+    .btn-secondary:hover { background: rgba(255, 255, 255, 0.2); }
+
+    .settings-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      padding: 12px 14px;
+      background: rgba(15, 23, 42, 0.6);
+      border-radius: 14px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      margin: 8px 0;
+    }
+
+    .settings-label {
+      font-size: 14px;
+      font-weight: 600;
+      color: #e2e8f0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
 
     .dialogue-overlay {
       position: absolute;
@@ -293,7 +342,7 @@
       margin-top: 8px;
     }
 
-    /* Удобный мобильный геймпад под большие пальцы */
+    /* Мобильный геймпад */
     .touch-controls {
       width: 100%;
       max-width: 900px;
@@ -376,7 +425,6 @@
         <button id="btnMute" class="btn-icon" title="Звук">🔊</button>
         <input id="volumeSlider" class="volume-slider" type="range" min="0" max="1" step="0.05" value="1">
       </div>
-      <button id="btnRestartRoom" class="btn-pill" title="Начать заново уровень">↺ Уровень</button>
       <button id="btnFullReset" class="btn-pill btn-danger" title="Начать заново всю игру">✕ Сначала</button>
     </div>
   </header>
@@ -384,25 +432,48 @@
   <main class="game-viewport">
     <canvas id="gameCanvas"></canvas>
 
-    <div id="startScreen" class="modal-overlay">
+    <!-- Главное Меню -->
+    <div id="startScreen" class="modal-overlay menu-bg">
       <div class="modal-card">
         <div class="modal-icon">🌸</div>
-        <h2 class="modal-title">Небесные Обители</h2>
+        <h2 class="modal-title">Небесная Обитель</h2>
         <p class="modal-desc">
-          Уворачивайтесь от падающих предметов и перепрыгивайте встречные опасности. Продержитесь по 30 секунд в каждой из 3 обителей, чтобы вознестись в рай.
+          Уворачивайтесь от падающих предметов и перепрыгивайте встречные опасности. Продержитесь по 30 секунд на каждом из уровней, чтобы вознестись в рай.
         </p>
-        <button id="btnStart" class="btn-action">Начать Путешествие ✨</button>
+        <div class="menu-btn-group">
+          <button id="btnStart" class="btn-action">Начать игру ✨</button>
+          <button id="btnOpenSettings" class="btn-action btn-secondary">Настройки ⚙️</button>
+        </div>
       </div>
     </div>
 
+    <!-- Модальное окно настроек -->
+    <div id="settingsScreen" class="modal-overlay menu-bg hidden">
+      <div class="modal-card">
+        <div class="modal-icon">⚙️</div>
+        <h2 class="modal-title">Настройки</h2>
+        <div class="settings-row">
+          <span class="settings-label"><span id="settingsMuteIcon">🔊</span> Громкость</span>
+          <input id="settingsVolumeSlider" class="volume-slider" style="width: 110px;" type="range" min="0" max="1" step="0.05" value="1">
+        </div>
+        <div class="menu-btn-group">
+          <button id="btnCloseSettings" class="btn-action">Назад в меню</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Модальное окно паузы (включает кнопку перезапуска уровня) -->
     <div id="pauseScreen" class="modal-overlay hidden">
       <div class="modal-card">
         <div class="modal-icon">⏸️</div>
         <h2 class="modal-title">Игра на паузе</h2>
         <p class="modal-desc">
-          Время замерло в воздухе. Отдохните и возвращайтесь к испытаниям!
+          Время замерло в воздухе. Отдохните или начните испытание заново!
         </p>
-        <button id="btnResume" class="btn-action">Продолжить 🌿</button>
+        <div class="menu-btn-group">
+          <button id="btnResume" class="btn-action">Продолжить 🌿</button>
+          <button id="btnRestartRoom" class="btn-action btn-secondary">↺ Начать уровень заново</button>
+        </div>
       </div>
     </div>
 
@@ -430,7 +501,7 @@
         <div class="modal-icon">🪶</div>
         <h2 class="modal-title" style="color: #fde047;">Испепелены в Свете!</h2>
         <p class="modal-desc" style="margin-bottom: 0;">
-          Вы с честью преодолели все испытания! Но свободные места в раю подошли к концу. Ваш дух стал теплым закатным сиянием небес, наверное...
+          Вы с честью преодолели все испытания! Но свободные места в раю подошли к концу. Ваш дух стал тёплым закатным сиянием небес, наверное...
         </p>
       </div>
     </div>
@@ -744,6 +815,7 @@
     const progressBarEl = document.getElementById('progressBar');
 
     const startScreen = document.getElementById('startScreen');
+    const settingsScreen = document.getElementById('settingsScreen');
     const pauseScreen = document.getElementById('pauseScreen');
     const deathScreen = document.getElementById('deathScreen');
     const dialogueOverlay = document.getElementById('dialogueOverlay');
@@ -751,6 +823,8 @@
     const endingScreen = document.getElementById('endingScreen');
 
     const btnStart = document.getElementById('btnStart');
+    const btnOpenSettings = document.getElementById('btnOpenSettings');
+    const btnCloseSettings = document.getElementById('btnCloseSettings');
     const btnResume = document.getElementById('btnResume');
     const btnPause = document.getElementById('btnPause');
     const btnRevive = document.getElementById('btnRevive');
@@ -758,6 +832,8 @@
     const btnFullReset = document.getElementById('btnFullReset');
     const btnMute = document.getElementById('btnMute');
     const volumeSlider = document.getElementById('volumeSlider');
+    const settingsVolumeSlider = document.getElementById('settingsVolumeSlider');
+    const settingsMuteIcon = document.getElementById('settingsMuteIcon');
 
     const STAGE_CONFIGS = {
       1: {
@@ -814,7 +890,22 @@
     let CW = 800;
     let CH = 500;
     let floorY = 450;
-    let mobileScale = 1.0; // Динамический масштаб для мобильных
+    let mobileScale = 1.0;
+
+    // Фоновые облака специально для главного меню
+    let menuClouds = [];
+    function initMenuClouds() {
+      menuClouds = [];
+      for (let i = 0; i < 9; i++) {
+        menuClouds.push({
+          x: Math.random() * CW,
+          y: Math.random() * (CH * 0.85) + 30,
+          scale: Math.random() * 0.7 + 0.6,
+          speed: Math.random() * 14 + 10,
+          alpha: Math.random() * 0.35 + 0.25
+        });
+      }
+    }
 
     function resize() {
       const parent = canvas.parentElement;
@@ -832,11 +923,10 @@
       ctx.resetTransform();
       ctx.scale(dpr, dpr);
 
-      // На узких мобильных экранах уменьшаем пропорции персонажа и предметов
       mobileScale = CW < 550 ? 0.78 : 1.0;
-
       floorY = CH - 42;
       hero.updateDimensions();
+      if (menuClouds.length === 0) initMenuClouds();
     }
     window.addEventListener('resize', resize);
 
@@ -934,7 +1024,6 @@
         const cy = this.y + this.h / 2;
         c.translate(cx, cy);
 
-        // Масштабирование персонажа под экран
         c.scale(mobileScale, mobileScale);
 
         if (!this.facingRight) c.scale(-1, 1);
@@ -1155,7 +1244,6 @@
         this.w = 36 * mobileScale;
         this.h = 22 * mobileScale;
         this.y = y;
-        // Запускаем далеко за пределами экрана, чтобы появление было плавным
         const offset = 140;
         this.x = side === 'left' ? -offset : CW + offset;
         this.vx = (side === 'left' ? 1 : -1) * speed;
@@ -1535,7 +1623,48 @@
       c.restore();
     }
 
-    function renderScene(c) {
+    // Фоновая отрисовка для главного меню и настроек
+    function renderMenuBackdrop(c, dt) {
+      const grad = c.createLinearGradient(0, 0, 0, CH);
+      grad.addColorStop(0, '#1f1b3c');
+      grad.addColorStop(0.55, '#3b2d54');
+      grad.addColorStop(1, '#6b4c6e');
+      c.fillStyle = grad;
+      c.fillRect(0, 0, CW, CH);
+
+      // Плывущие облака
+      menuClouds.forEach(cl => {
+        cl.x += cl.speed * dt;
+        if (cl.x > CW + 160) cl.x = -160;
+
+        c.save();
+        c.translate(cl.x, cl.y);
+        c.scale(cl.scale, cl.scale);
+        c.fillStyle = `rgba(255, 255, 255, ${cl.alpha})`;
+        c.beginPath();
+        c.arc(0, 0, 28, 0, Math.PI * 2);
+        c.arc(26, -10, 24, 0, Math.PI * 2);
+        c.arc(52, 2, 26, 0, Math.PI * 2);
+        c.arc(-24, 6, 22, 0, Math.PI * 2);
+        c.fill();
+        c.restore();
+      });
+
+      // Мягкие мерцающие частицы света
+      state.ambientParticles.forEach(p => {
+        c.fillStyle = `rgba(254, 240, 138, ${p.alpha * 1.2})`;
+        c.beginPath();
+        c.arc(p.x, p.y, p.r * 1.2, 0, Math.PI * 2);
+        c.fill();
+      });
+    }
+
+    function renderScene(c, dt) {
+      if (state.screen === 'START') {
+        renderMenuBackdrop(c, dt);
+        return;
+      }
+
       const isBossStage = (state.screen === 'CUTSCENE' || state.currentLevel === 'boss');
       const st = STAGE_CONFIGS[isBossStage ? 'boss' : state.currentLevel] || STAGE_CONFIGS[1];
 
@@ -1928,7 +2057,7 @@
     function updateHeaderUI() {
       const isBoss = (state.currentLevel === 'boss' || state.screen === 'CUTSCENE');
       const cfg = STAGE_CONFIGS[isBoss ? 'boss' : state.currentLevel] || STAGE_CONFIGS[1];
-      roomCounterEl.textContent = isBoss ? 'Финал' : `Комната ${state.currentLevel} из 3`;
+      roomCounterEl.textContent = isBoss ? 'Финал' : `Уровень ${state.currentLevel} из 3`;
       roomTitleEl.textContent = cfg.name;
     }
 
@@ -1989,13 +2118,11 @@
 
           state.horizontalTimer -= dt;
           if (state.horizontalTimer <= 0 && cfg && cfg.sideHazard) {
-            // Комфортный интервал спавна сбоку
             const isMobile = CW < 550;
             state.horizontalTimer = Math.random() * 3.2 + (isMobile ? 4.2 : 3.2);
 
             const side = Math.random() > 0.5 ? 'left' : 'right';
 
-            // На телефоне скорость сбалансирована так, чтобы препятствие летело ~2.5–3 секунды через экран
             let hazSpeed = Math.random() * 50 + 190 + (state.currentLevel * 25);
             if (isMobile) {
               hazSpeed = (CW * 0.32) + (state.currentLevel * 10);
@@ -2065,7 +2192,7 @@
       state.islandWobble += dt * 1.2;
 
       ctx.clearRect(0, 0, CW, CH);
-      renderScene(ctx);
+      renderScene(ctx, dt);
 
       if (state.screen === 'PLAYING') {
         state.fallingItems.forEach(item => item.draw(ctx));
@@ -2124,7 +2251,6 @@
     window.addEventListener('keydown', onKeyDown);
     window.addEventListener('keyup', onKeyUp);
 
-    // Улучшенный мультитач без сбоев и залипаний
     function bindTouch(btn, onDown, onUp) {
       btn.addEventListener('touchstart', (e) => {
         e.preventDefault();
@@ -2150,24 +2276,48 @@
     bindTouch(document.getElementById('btnTouchRight'), () => { if (!state.isPaused) state.keys.right = true; }, () => { state.keys.right = false; });
     bindTouch(document.getElementById('btnTouchJump'), () => { if (!state.isPaused) state.keys.jump = true; }, () => { state.keys.jump = false; });
 
+    function syncVolumeControls(val) {
+      volumeSlider.value = val;
+      settingsVolumeSlider.value = val;
+      audio.setVolume(val);
+      if (audio.isMuted) {
+        audio.toggleMute();
+      }
+      btnMute.textContent = '🔊';
+      settingsMuteIcon.textContent = '🔊';
+    }
+
     btnMute.addEventListener('click', () => {
       audio.init();
       audio.resume();
       const muted = audio.toggleMute();
       btnMute.textContent = muted ? '🔇' : '🔊';
+      settingsMuteIcon.textContent = muted ? '🔇' : '🔊';
+    });
+
+    volumeSlider.addEventListener('input', (e) => {
+      audio.init();
+      audio.resume();
+      syncVolumeControls(e.target.value);
+    });
+
+    settingsVolumeSlider.addEventListener('input', (e) => {
+      audio.init();
+      audio.resume();
+      syncVolumeControls(e.target.value);
     });
 
     btnPause.addEventListener('click', () => { togglePause(); });
     btnResume.addEventListener('click', () => { togglePause(); });
 
-    volumeSlider.addEventListener('input', (e) => {
-      audio.init();
-      audio.resume();
-      audio.setVolume(e.target.value);
-      if (audio.isMuted) {
-        audio.toggleMute();
-        btnMute.textContent = '🔊';
-      }
+    btnOpenSettings.addEventListener('click', () => {
+      startScreen.classList.add('hidden');
+      settingsScreen.classList.remove('hidden');
+    });
+
+    btnCloseSettings.addEventListener('click', () => {
+      settingsScreen.classList.add('hidden');
+      startScreen.classList.remove('hidden');
     });
 
     function restartCurrentRoom() {
@@ -2192,6 +2342,7 @@
     function fullGameReset() {
       state.isPaused = false;
       pauseScreen.classList.add('hidden');
+      settingsScreen.classList.add('hidden');
       state.screen = 'PLAYING';
       state.currentLevel = 1;
       state.timeLeft = 30.0;
@@ -2240,6 +2391,7 @@
     window.addEventListener('load', () => {
       resize();
       initAtmosphere();
+      initMenuClouds();
       updateHeaderUI();
       hero.reset(CW / 2);
       requestAnimationFrame(gameLoop);
